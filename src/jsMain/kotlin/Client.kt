@@ -1,17 +1,13 @@
+@file:Suppress("DEPRECATION")
+
 import kotlinx.browser.document
 import react.create
 import react.dom.client.createRoot
+import react.dom.render
 
 fun main() {
-    val container = document.getElementById("root")
-    if (container != null) {
-        document.body!!.appendChild(container)
-    }
+    val container = document.getElementById("root")?: error("Couldn't find container!")
+    document.body!!.appendChild(container)
 
-    val welcome = Welcome.create {
-        name = "Kotlin/JS"
-    }
-    if (container != null) {
-        createRoot(container).render(welcome)
-    }
+    render(App.create(), container)
 }

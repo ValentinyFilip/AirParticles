@@ -10,6 +10,8 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
 
 val particles = mutableListOf(
     ParticlesItem(true, 15, "49.856017, 18.527613"),
@@ -49,7 +51,7 @@ fun Application.module() {
             get("/testAPI") {
                 call.respondText("API test")
             }
-            get("/{location?}") {
+            get("/{location}") {
                 val location = call.parameters["location"] ?: return@get call.respondText(
                     "Missing location",
                     status = HttpStatusCode.BadRequest
@@ -67,22 +69,20 @@ fun Application.module() {
                 particles += call.receive<ParticlesItem>()
                 call.respond(HttpStatusCode.OK)
             }
-            patch<ParticlesItem>("/patch/{location?}") {
+            patch<ParticlesItem>("/patch/{location}") {
                 val location = call.parameters["location"] ?: return@patch call.respondText(
                     "Missing location",
                     status = HttpStatusCode.BadRequest
                 )
                 particles.removeIf { it.location == location }
                 particles += call.receive<ParticlesItem>()
-                call.respond(HttpStatusCode.OK)
             }
-            delete("/delete/{location?}") {
+            delete("/delete/{location}") {
                 val location = call.parameters["location"] ?: return@delete call.respondText(
                     "Missing location",
                     status = HttpStatusCode.BadRequest
                 )
                 particles.removeIf { it.location == location }
-                call.respond(HttpStatusCode.OK)
             }
         }
         static("/") {
