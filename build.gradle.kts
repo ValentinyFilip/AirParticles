@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.serialization") version "1.7.0"
 }
 
-val ktorVersion = "2.0.1"
+val ktorVersion = "2.0.2"
 val reactVersion = "18.0.0-pre.332-kotlin-1.6.21"
 
 group = "org.example"
@@ -43,6 +43,7 @@ kotlin {
         val commonTest by getting
         val jvmMain by getting {
             dependencies {
+                implementation("io.ktor:ktor:$ktorVersion")
                 implementation("io.ktor:ktor-server:$ktorVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-server-core:$ktorVersion")
