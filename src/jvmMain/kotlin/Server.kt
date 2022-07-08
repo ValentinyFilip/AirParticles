@@ -12,14 +12,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import org.litote.kmongo.*
+import org.litote.kmongo.coroutine.coroutine
+import org.litote.kmongo.reactivestreams.KMongo
 
-val particles = mutableListOf(
-    ParticlesItem(true, 15, "49.856017, 18.527613"),
-    ParticlesItem(false, 10, "49.854576, 18.548279"),
-    ParticlesItem(false, 4, "49.850564, 18.541485"),
-    ParticlesItem(false, 25, "49.856197, 18.538224"),
-    ParticlesItem(true, 6, "49.857516, 18.565402")
-)
+val client = KMongo.createClient().coroutine
+val database = client.getDatabase("particles")
+val collection = database.getCollection<ParticlesItem>()
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -56,17 +55,13 @@ fun Application.module() {
                     "Missing location",
                     status = HttpStatusCode.BadRequest
                 )
-                val item = particles.find { it.location == location } ?: return@get call.respondText(
-                    "No sensor with this location: $location",
-                    status = HttpStatusCode.NoContent
-                )
-                call.respond(item)
+                call.respond(collection.find(ParticlesItem::location eq location).toList())
             }
             get("/getall") {
-                call.respond(particles)
+                call.respond(collection.find().toList())
             }
             post("/post") {
-                particles += call.receive<ParticlesItem>()
+                collection.insertOne(call.receive())
                 call.respond(HttpStatusCode.OK)
             }
             patch<ParticlesItem>("/patch/{location}") {
@@ -74,15 +69,17 @@ fun Application.module() {
                     "Missing location",
                     status = HttpStatusCode.BadRequest
                 )
-                particles.removeIf { it.location == location }
-                particles += call.receive<ParticlesItem>()
+                val newParticles = call.receive<ParticlesItem>()
+                collection.updateOne(ParticlesItem::location eq location, setValue(ParticlesItem::particles, newParticles.particles))
+                call.respond(HttpStatusCode.OK)
             }
             delete("/delete/{location}") {
                 val location = call.parameters["location"] ?: return@delete call.respondText(
                     "Missing location",
                     status = HttpStatusCode.BadRequest
                 )
-                particles.removeIf { it.location == location }
+                collection.deleteOne(ParticlesItem::location eq location)
+                call.respond(HttpStatusCode.OK)
             }
         }
         static("/") {

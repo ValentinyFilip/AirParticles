@@ -8,6 +8,7 @@ plugins {
 
 val ktorVersion = "2.0.2"
 val reactVersion = "18.0.0-pre.332-kotlin-1.6.21"
+val kmongoVersion = "4.6.1"
 
 group = "org.example"
 version = "1.0"
@@ -49,6 +50,8 @@ kotlin {
                 implementation("ch.qos.logback:logback-classic:1.2.11")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-server-cors:$ktorVersion")
+                implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
+                implementation("org.litote.kmongo:kmongo:$kmongoVersion")
             }
         }
         val jsMain by getting {
