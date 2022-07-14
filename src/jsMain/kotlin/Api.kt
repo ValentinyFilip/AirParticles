@@ -13,16 +13,15 @@ val endpoint = window.location.origin
 val jsonClient = HttpClient {
     install(ContentNegotiation) {
         json()
-
     }
 }
 
-suspend fun getParticles() : List<ParticlesItem> {
+suspend fun getParticles(): List<ParticlesItem> {
     return jsonClient.get(endpoint + ParticlesItem.path + "/getall").body()
 }
 
-suspend fun getParticle(particlesItem: ParticlesItem) : ParticlesItem {
-    return jsonClient.get(endpoint + ParticlesItem.path +"/${particlesItem.location}").body()
+suspend fun getParticle(particlesItem: ParticlesItem): ParticlesItem {
+    return jsonClient.get(endpoint + ParticlesItem.path + "/${particlesItem.location}").body()
 }
 
 suspend fun addParticle(particlesItem: ParticlesItem) {
