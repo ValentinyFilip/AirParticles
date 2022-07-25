@@ -71,6 +71,7 @@ fun Application.module() {
                 )
                 val newParticles = call.receive<ParticlesItem>()
                 collection.updateOne(ParticlesItem::location eq location, setValue(ParticlesItem::particles, newParticles.particles))
+                collection.updateOne(ParticlesItem::location eq location, setValue(ParticlesItem::lastUpdated, newParticles.lastUpdated))
                 call.respond(HttpStatusCode.OK)
             }
             delete("/delete/{location}") {

@@ -1,7 +1,11 @@
+package navbar
+
+import Link
 import csstype.Display
 import csstype.None
 import csstype.px
 import emotion.react.css
+import hex
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.a

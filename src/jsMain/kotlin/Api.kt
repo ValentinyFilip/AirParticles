@@ -25,7 +25,7 @@ suspend fun getParticle(particlesItem: ParticlesItem): ParticlesItem {
 }
 
 suspend fun addParticle(particlesItem: ParticlesItem) {
-    jsonClient.post(endpoint + ParticlesItem.path) {
+    jsonClient.post(endpoint + ParticlesItem.path + "/post") {
         contentType(ContentType.Application.Json)
         setBody(particlesItem)
     }
