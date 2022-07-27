@@ -21,7 +21,7 @@ suspend fun getParticles(): List<ParticlesItem> {
 }
 
 suspend fun getParticle(particlesItem: ParticlesItem): ParticlesItem {
-    return jsonClient.get(endpoint + ParticlesItem.path + "/${particlesItem.location}").body()
+    return jsonClient.get(endpoint + ParticlesItem.path + "/${particlesItem.id}").body()
 }
 
 suspend fun addParticle(particlesItem: ParticlesItem) {
@@ -32,5 +32,5 @@ suspend fun addParticle(particlesItem: ParticlesItem) {
 }
 
 suspend fun deleteParticle(particlesItem: ParticlesItem) {
-    jsonClient.delete(endpoint + ParticlesItem.path + "/delete" + "/${particlesItem.location}")
+    jsonClient.delete(endpoint + ParticlesItem.path + "/delete" + "/${particlesItem.id}")
 }

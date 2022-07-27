@@ -13,8 +13,10 @@ import react.dom.html.ReactHTML.a
 import react.dom.html.ReactHTML.div
 
 external interface ShowAllProps : Props {
+    var edit: Boolean
     var particlesList: List<ParticlesItem>
     var selectedItem: ParticlesItem?
+    var onChange: (ParticlesItem) -> Unit
     var onSelectedItem: (ParticlesItem) -> Unit
 }
 
@@ -56,7 +58,11 @@ var showAll = FC<ShowAllProps> { props ->
         }
         if (particle == props.selectedItem) {
             showMore {
+                editMore = props.edit
                 item = particle
+                onChange = { change ->
+                    props.onChange(change)
+                }
             }
         }
     }

@@ -62,6 +62,7 @@ val App = FC<Props> {
                     width = 500.px
                 }
                 showAll {
+                    edit = false
                     particlesList = particles
                     selectedItem = currentItem
                     onSelectedItem = { item ->
@@ -71,9 +72,16 @@ val App = FC<Props> {
             }
             if (currentLink.id == 4) div {
                 css {
-                    width = 200.px
+                    height = 100.pct
+                    overflowX = Overflow.hidden
+                    width = 500.px
                 }
                 edit {
+                    particlesList = particles
+                    selectedItem = currentItem
+                    onSelectedItem = { item ->
+                        currentItem = item
+                    }
                     onChange = { input ->
                         particles = input
                     }
