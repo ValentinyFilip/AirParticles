@@ -36,7 +36,7 @@ var edit = FC<EditProps> { props ->
             particlesList = props.particlesList
             selectedItem = props.selectedItem
             onSelectedItem = props.onSelectedItem
-            onChange = { item ->
+            onDelete = { item ->
                 scope.launch {
                     deleteParticle(item)
                     props.onChange(getParticles())

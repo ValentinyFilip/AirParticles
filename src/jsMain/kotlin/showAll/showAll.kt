@@ -16,7 +16,7 @@ external interface ShowAllProps : Props {
     var edit: Boolean
     var particlesList: List<ParticlesItem>
     var selectedItem: ParticlesItem?
-    var onChange: (ParticlesItem) -> Unit
+    var onDelete: (ParticlesItem) -> Unit
     var onSelectedItem: (ParticlesItem) -> Unit
 }
 
@@ -60,8 +60,8 @@ var showAll = FC<ShowAllProps> { props ->
             showMore {
                 editMore = props.edit
                 item = particle
-                onChange = { change ->
-                    props.onChange(change)
+                onDelete = { change ->
+                    props.onDelete(change)
                 }
             }
         }

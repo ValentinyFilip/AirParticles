@@ -17,10 +17,8 @@ import react.dom.html.ReactHTML.div
 external interface ShowMoreProps : Props {
     var editMore: Boolean
     var item: ParticlesItem
-    var onChange: (ParticlesItem) -> Unit
+    var onDelete: (ParticlesItem) -> Unit
 }
-
-private val scope = MainScope()
 
 var showMore = FC<ShowMoreProps> { props ->
     div {
@@ -57,9 +55,6 @@ var showMore = FC<ShowMoreProps> { props ->
         }
         if (props.editMore) {
             div {
-                css {
-
-                }
                 a {
                     css {
                         position = Position.relative
@@ -67,7 +62,6 @@ var showMore = FC<ShowMoreProps> { props ->
                         borderRadius = 10.px
                         backgroundColor = hex("#BFBFBF")
                         color = hex("#BFBFBF")
-                        top = 35.px
                         hover {
                             color = hex("#000000")
                         }
@@ -75,7 +69,7 @@ var showMore = FC<ShowMoreProps> { props ->
                     +"Delete"
                 }
                 onClick =  {
-                    props.onChange(props.item)
+                    props.onDelete(props.item)
                 }
             }
         }

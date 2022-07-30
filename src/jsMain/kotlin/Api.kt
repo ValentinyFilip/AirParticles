@@ -21,7 +21,12 @@ suspend fun getParticles(): List<ParticlesItem> {
 }
 
 suspend fun getParticle(particlesItem: ParticlesItem): ParticlesItem {
-    return jsonClient.get(endpoint + ParticlesItem.path + "/${particlesItem.id}").body()
+    return if (particlesItem.id != 0) {
+        jsonClient.get(endpoint + ParticlesItem.path + "/${particlesItem.id}").body()
+    } else {
+        val id = particlesItem.id.hashCode()
+        jsonClient.get(endpoint + ParticlesItem.path + "/${id}").body()
+    }
 }
 
 suspend fun addParticle(particlesItem: ParticlesItem) {

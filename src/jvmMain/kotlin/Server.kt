@@ -50,12 +50,12 @@ fun Application.module() {
             get("/testAPI") {
                 call.respondText("API test")
             }
-            get("/{location}") {
-                val id = call.parameters["location"] ?: return@get call.respondText(
+            get("/{id}") {
+                val id = call.parameters["id"] ?: return@get call.respondText(
                     "Missing location",
                     status = HttpStatusCode.BadRequest
                 )
-                call.respond(collection.find(ParticlesItem::location eq id).toList())
+                call.respond(collection.find(ParticlesItem::id eq id).toList())
             }
             get("/getall") {
                 call.respond(collection.find().toList())
@@ -64,22 +64,22 @@ fun Application.module() {
                 collection.insertOne(call.receive())
                 call.respond(HttpStatusCode.OK)
             }
-            patch<ParticlesItem>("/patch/{location}") {
-                val id = call.parameters["location"] ?: return@patch call.respondText(
+            patch<ParticlesItem>("/patch/{id}") {
+                val id = call.parameters["id"] ?: return@patch call.respondText(
                     "Missing id",
                     status = HttpStatusCode.BadRequest
                 )
                 val newParticles = call.receive<ParticlesItem>()
-                collection.updateOne(ParticlesItem::location eq id, setValue(ParticlesItem::particles, newParticles.particles))
-                collection.updateOne(ParticlesItem::location eq id, setValue(ParticlesItem::lastUpdated, newParticles.lastUpdated))
+                collection.updateOne(ParticlesItem::id eq id, setValue(ParticlesItem::particles, newParticles.particles))
+                collection.updateOne(ParticlesItem::id eq id, setValue(ParticlesItem::lastUpdated, newParticles.lastUpdated))
                 call.respond(HttpStatusCode.OK)
             }
-            delete("/delete/{location}") {
-                val id = call.parameters["location"] ?: return@delete call.respondText(
+            delete("/delete/{id}") {
+                val id = call.parameters["id"] ?: return@delete call.respondText(
                     "Missing id",
                     status = HttpStatusCode.BadRequest
                 )
-                collection.deleteOne(ParticlesItem::location eq id)
+                collection.deleteOne(ParticlesItem::id eq id)
                 call.respond(HttpStatusCode.OK)
             }
         }
