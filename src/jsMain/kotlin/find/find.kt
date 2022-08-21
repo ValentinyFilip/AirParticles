@@ -1,28 +1,33 @@
-package showAll
+package find
 
 import ParticlesItem
 import csstype.Cursor
 import csstype.Display
 import csstype.em
 import csstype.px
+import editList.InputComponent
 import emotion.react.css
+import getParticle
 import hex
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import mui.icons.material.MapSharp
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.a
 import react.dom.html.ReactHTML.div
+import showAll.showMore
 
-external interface ShowAllProps : Props {
-    var edit: Boolean
-    var particlesList: List<ParticlesItem>
-    var selectedItem: ParticlesItem?
+external interface FindProps : Props {
+    var item: ParticlesItem?
+    var onChange: (ParticlesItem) -> Unit
     var onDelete: (ParticlesItem) -> Unit
-    var onSelectedItem: (ParticlesItem) -> Unit
 }
 
-var showAll = FC<ShowAllProps> { props ->
-    for (particle in props.particlesList) {
+private val scope = MainScope()
+
+var find = FC<FindProps> { props ->
+    if (props.item != null) {
         div {
             css {
                 height = 4.em
@@ -32,21 +37,12 @@ var showAll = FC<ShowAllProps> { props ->
                 paddingBottom = 8.px
                 paddingLeft = 32.px
                 backgroundColor = hex("#E7E9EB")
-                hover {
-                    backgroundColor = hex("#CCCCCC")
-                }
-                if (particle == props.selectedItem) {
-                    backgroundColor = hex("#04AA6D")
-                    hover {
-                        backgroundColor = hex("#04AA6D")
-                    }
-                }
             }
             a {
                 css {
                     display = Display.block
                 }
-                +"Sensor: ${particle.location}"
+                +"Sensor: ${props.item!!.location}"
                 div {
                     css {
                         width = 20.px
@@ -54,7 +50,7 @@ var showAll = FC<ShowAllProps> { props ->
                     }
                     MapSharp()
                     onClick = {
-                        var loc = "https://www.google.com/maps/search/?api=1&query=" + particle.location.trim()
+                        var loc = "https://www.google.com/maps/search/?api=1&query=" + props.item!!.location.trim()
                         js("window.open(loc, '_blank', 'noopener,noreferrer')")
                     }
                 }
@@ -63,20 +59,23 @@ var showAll = FC<ShowAllProps> { props ->
                 css {
                     display = Display.block
                 }
-                +"Reading: ${particle.particles}"
-            }
-            
-            onClick = {
-                props.onSelectedItem(particle)
+                +"Reading: ${props.item!!.particles}"
             }
         }
-        if (particle == props.selectedItem) {
-            showMore {
-                editMore = props.edit
-                item = particle
-                onDelete = { change ->
-                    props.onDelete(change)
-                }
+        showMore {
+            editMore = false
+            item = props.item!!
+            onDelete = { change ->
+                props.onDelete(change)
+            }
+        }
+    }
+
+    InputComponent {
+        onSubmit = { input ->
+            js("console.log(input)")
+            scope.launch {
+                props.onChange(getParticle(input))
             }
         }
     }

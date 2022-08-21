@@ -1,26 +1,26 @@
+@file:Suppress("UNREACHABLE_CODE")
+
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
+import io.ktor.server.netty.*
 import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.cors.*
-import io.ktor.server.plugins.cors.CORS
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
 import org.litote.kmongo.*
-import org.litote.kmongo.coroutine.coroutine
+import org.litote.kmongo.coroutine.*
 import org.litote.kmongo.reactivestreams.KMongo
 
 val client = KMongo.createClient().coroutine
 val database = client.getDatabase("particles")
 val collection = database.getCollection<ParticlesItem>()
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 fun Application.module() {
     install(ContentNegotiation) {
@@ -30,7 +30,6 @@ fun Application.module() {
         allowMethod(HttpMethod.Get)
         allowMethod(HttpMethod.Post)
         allowMethod(HttpMethod.Delete)
-        allowMethod(HttpMethod.Patch)
         anyHost()
     }
     install(Compression) {
@@ -55,7 +54,7 @@ fun Application.module() {
                     "Missing location",
                     status = HttpStatusCode.BadRequest
                 )
-                call.respond(collection.find(ParticlesItem::id eq id).toList())
+                call.respond(collection.find(ParticlesItem::id eq id.toInt()))
             }
             get("/getall") {
                 call.respond(collection.find().toList())
@@ -64,14 +63,15 @@ fun Application.module() {
                 collection.insertOne(call.receive())
                 call.respond(HttpStatusCode.OK)
             }
-            patch<ParticlesItem>("/patch/{id}") {
-                val id = call.parameters["id"] ?: return@patch call.respondText(
+            post("/patch/{id}") {
+                val id = call.parameters["id"]?.toInt() ?: return@post call.respondText(
                     "Missing id",
                     status = HttpStatusCode.BadRequest
                 )
                 val newParticles = call.receive<ParticlesItem>()
                 collection.updateOne(ParticlesItem::id eq id, setValue(ParticlesItem::particles, newParticles.particles))
                 collection.updateOne(ParticlesItem::id eq id, setValue(ParticlesItem::lastUpdated, newParticles.lastUpdated))
+                call.respond(newParticles)
                 call.respond(HttpStatusCode.OK)
             }
             delete("/delete/{id}") {
@@ -79,7 +79,7 @@ fun Application.module() {
                     "Missing id",
                     status = HttpStatusCode.BadRequest
                 )
-                collection.deleteOne(ParticlesItem::id eq id)
+                collection.deleteOne(ParticlesItem::id eq id.toInt())
                 call.respond(HttpStatusCode.OK)
             }
         }

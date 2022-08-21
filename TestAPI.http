@@ -1,0 +1,9 @@
+POST http://127.0.0.1:9090/particles/patch/-1377309362
+Content-Type: application/json
+
+{
+  "lastUpdated": 20081700,
+  "particles": 10,
+  "location": "",
+  "id": -1377309362
+}

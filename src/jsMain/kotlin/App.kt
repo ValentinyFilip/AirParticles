@@ -1,7 +1,11 @@
-import csstype.*
-import csstype.Position.Companion.relative
+
+import csstype.Display
+import csstype.Overflow
+import csstype.pct
+import csstype.px
 import editList.edit
 import emotion.react.css
+import find.find
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import navbar.Navbar
@@ -18,6 +22,7 @@ val App = FC<Props> {
     var currentLink: Link by useState(Link(2, "Show all sensors"))
     var particles by useState(emptyList<ParticlesItem>())
     var currentItem: ParticlesItem? by useState(null)
+    var searchedItem: ParticlesItem? by useState(null)
 
     useEffectOnce {
         scope.launch {
@@ -67,6 +72,19 @@ val App = FC<Props> {
                     selectedItem = currentItem
                     onSelectedItem = { item ->
                         currentItem = item
+                    }
+                }
+            }
+            if (currentLink.id == 3) div {
+                css {
+                    height = 100.pct
+                    overflowX = Overflow.hidden
+                    width = 500.px
+                }
+                find {
+                    item = searchedItem
+                    onChange = { input ->
+                        searchedItem = input
                     }
                 }
             }

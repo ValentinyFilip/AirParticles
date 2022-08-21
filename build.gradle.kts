@@ -36,7 +36,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
             }
         }
         val commonTest by getting
@@ -56,6 +55,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-mui-icons:5.8.4-pre.371")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react:$reactVersion")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-legacy:$reactVersion")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$reactVersion")

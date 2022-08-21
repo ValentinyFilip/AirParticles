@@ -1,14 +1,10 @@
 package showAll
 
 import ParticlesItem
-import csstype.Display
-import csstype.Position
-import csstype.em
-import csstype.px
+import csstype.*
 import emotion.react.css
 import hex
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import mui.icons.material.ContentCopy
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.a
@@ -29,27 +25,49 @@ var showMore = FC<ShowMoreProps> { props ->
             paddingBottom = 8.px
             paddingLeft = 32.px
             backgroundColor = hex("#CCCCCC")
-            height = 2.em
+            height = if (props.editMore) {
+                6.em
+            } else {
+                3.em
+            }
         }
         a {
             css {
                 position = Position.relative
                 right = 20.px
-                borderRadius = 10.px
+                borderRadius = 8.px
                 backgroundColor = hex("#BFBFBF")
                 color = hex("#BFBFBF")
                 top = 10.px
+                if (props.editMore) {
+                    color = hex("#000000")
+                }
                 hover {
                     color = hex("#000000")
                 }
             }
             +"ID: ${props.item.id}"
         }
-        a {
+        div {
             css {
                 position = Position.relative
-                top = 10.px
-                left = 100.px
+                width = 24.px
+                right = 20.px
+                left = 200.px
+                bottom = 22.px
+                cursor = Cursor.pointer
+            }
+            ContentCopy()
+            onClick = {
+                var copyText = props.item.id
+                js("navigator.clipboard.writeText(copyText)")
+            }
+        }
+        a {
+            css {
+                bottom = 28.px
+                position = Position.relative
+                left = 250.px
             }
             +"Updated: ${props.item.lastUpdated}"
         }
@@ -59,11 +77,14 @@ var showMore = FC<ShowMoreProps> { props ->
                     css {
                         position = Position.relative
                         right = 20.px
-                        borderRadius = 10.px
+                        top = 20.px
+                        bottom = 45.px
+                        borderRadius = 8.px
                         backgroundColor = hex("#BFBFBF")
-                        color = hex("#BFBFBF")
+                        color = hex("#000000")
+                        cursor = Cursor.pointer
                         hover {
-                            color = hex("#000000")
+                            backgroundColor = hex("#FF033E")
                         }
                     }
                     +"Delete"
