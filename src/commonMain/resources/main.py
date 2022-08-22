@@ -5,9 +5,6 @@ import requests
 from datetime import datetime
 from pms7003 import Pms7003Sensor
 
-now = datetime.now()
-
-
 @dataclass
 class ParticlesItem:
     particles: int
@@ -29,16 +26,19 @@ def patch():
     response = requests.post(url, headers=headers, json=data)
     print("Response: %s" % (response.status_code))
 
-#def calcParticles():
-
-
-
 
 #sensor = Pms7003Sensor("dev/serial0")
 while True:
+    now = datetime.now()
     #sensor.wakeup()
-    #time.sleep(30)
-    ParticlesItem.particles = int(input("Enter particles: ")) #sensor.read()
+    time.sleep(30)
+
+    #placeHolderParticles = sensor.read()
+    #ParticlesItem.particles = placeHolderParticles["pm2_5"]
+    
+    placeHolderParticles = int(input("Enter particles: "))
+    ParticlesItem.particles = placeHolderParticles
+    
     ParticlesItem.lastUpdated = int(now.strftime("%d%m%H%M"))
     patch()
     #sensor.sleep()
