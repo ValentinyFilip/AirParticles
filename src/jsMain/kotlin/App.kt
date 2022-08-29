@@ -19,7 +19,7 @@ import showAll.showAll
 private val scope = MainScope()
 
 val App = FC<Props> {
-    var currentLink: Link by useState(Link(2, "Show all sensors"))
+    var currentLink: Link by useState(Link(1, "Home"))
     var particles by useState(emptyList<ParticlesItem>())
     var currentItem: ParticlesItem? by useState(null)
     var searchedItem: ParticlesItem? by useState(null)

@@ -5,6 +5,6 @@ import react.dom.html.ReactHTML.div
 
 var home = FC<Props> {
     a {
-        +"home"
+        +"test"
     }
 }
