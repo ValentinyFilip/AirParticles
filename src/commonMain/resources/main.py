@@ -23,15 +23,18 @@ def patch():
     headers = {
         "Content-type": "application/json"
     }
-    response = requests.post(url, headers=headers, json=data)
-    print("Response: %s" % (response.status_code))
-
+    try:
+        response = requests.post(url, headers=headers, json=data)
+    except:
+        print("error - couldnt finalize post request")
+    else:
+        print("Response: %s" % (response.status_code))
 
 #sensor = Pms7003Sensor("dev/serial0")
 while True:
     now = datetime.now()
     #sensor.wakeup()
-    time.sleep(30)
+    #time.sleep(30)
 
     #placeHolderParticles = sensor.read()
     #ParticlesItem.particles = placeHolderParticles["pm2_5"]

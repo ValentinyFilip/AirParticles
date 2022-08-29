@@ -3,7 +3,9 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 plugins {
     kotlin("multiplatform") version "1.7.0"
     application
+    distribution
     kotlin("plugin.serialization") version "1.7.0"
+    id("com.github.turansky.kfc.legacy-union") version "4.88.0"
 }
 
 val ktorVersion = "2.0.2"
@@ -98,4 +100,21 @@ tasks.getByName<Jar>("jvmJar") {
 
 tasks.getByName<JavaExec>("run") {
     classpath(tasks.getByName<Jar>("jvmJar"))
+}
+
+distributions {
+    main {
+        contents {
+            from("$buildDir/libs") {
+                rename("${rootProject.name}-jvm", rootProject.name)
+                into("lib")
+            }
+        }
+    }
+}
+
+tasks.named<CreateStartScripts>("startScripts") {
+    doLast {
+        windowsScript.writeText(windowsScript.readText().replace(Regex("set CLASSPATH=.*"), "set CLASSPATH=%APP_HOME%\\\\lib\\\\*"))
+    }
 }

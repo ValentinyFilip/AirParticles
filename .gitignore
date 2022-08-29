@@ -1,5 +1,11 @@
 /.gradle
-/build
+
+!build/
+
+build/*
+!build/install/*
+!build/distributions/*
+
 .idea/workspace.xml
 .idea/discord.xml
 
